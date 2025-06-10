@@ -17,15 +17,16 @@ export class RosterService {
   constructor(private readonly em: EntityManager) {}
 
   async findAll(): Promise<RosterRO> {
-    const knex = this.em.getConnection().getKnex();
-    const rows = await knex('user as u')
-      .leftJoin('article as a', 'u.id', 'a.author_id')
-      .groupBy('u.id')
-      .select('u.username')
-      .select(knex.raw('COUNT(a.id) as articleCount'))
-      .select(knex.raw('COALESCE(SUM(a.favorites_count),0) as favoritesCount'))
-      .select(knex.raw('MIN(a.created_at) as firstArticleDate'))
-      .orderBy('favoritesCount', 'desc');
+    const rows = await this.em.getConnection().execute(`
+  SELECT u.username,
+         COUNT(a.id) AS articleCount,
+         COALESCE(SUM(a.favorites_count), 0) AS favoritesCount,
+         MIN(a.created_at) AS firstArticleDate
+    FROM user u
+    LEFT JOIN article a ON u.id = a.author_id
+GROUP BY u.id
+ORDER BY favoritesCount DESC
+`);
 
     return {
       roster: rows.map((r: any) => ({
