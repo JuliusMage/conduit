@@ -1,1 +1,19 @@
-<p>TODO</p>
+<h1>Conduit Roster</h1>
+<table class="table table-striped" *ngIf="(roster$ | async) as roster">
+  <thead>
+    <tr>
+      <th>Author</th>
+      <th>Articles</th>
+      <th>Favorites</th>
+      <th>First Article</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let u of roster">
+      <td><a [routerLink]="['/profile', u.username]">{{ u.username }}</a></td>
+      <td>{{ u.articleCount }}</td>
+      <td>{{ u.favoritesCount }}</td>
+      <td>{{ u.firstArticleDate ? (u.firstArticleDate | date:'mediumDate') : '' }}</td>
+    </tr>
+  </tbody>
+</table>
