@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc",
+    "types": ["react", "react-native"],
+    "jsx": "react"
+  },
+  "files": ["src/index.tsx"],
+  "exclude": ["**/*.spec.ts", "**/*.test.ts"]
+}
